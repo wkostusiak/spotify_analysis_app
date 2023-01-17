@@ -1,0 +1,43 @@
+{% extends 'spotifystatsapp/general.html' %}
+{% block content %}
+
+ <div>
+    <h1>Congrats!</h1>
+    <h2>You are authenticated! </h2>
+
+     <!-- genres top artists scattered plot -->
+
+    {{ genres_bar_div|safe }}
+
+
+     <!-- names cloud -->
+
+    {{ names_cloud|safe }}
+
+     <!-- features bar chart -->
+
+     {{ bar_div|safe }}
+     {{ matrix_div|safe }}
+     {{ heat_div|safe }}
+     {{ scattered_plot|safe }}
+
+     <!-- genres in top songs -->
+
+     {{ donut_div_long|safe }}
+     {{ donut_div_short|safe }}
+
+
+
+     <h2>The data fetched using spotify API consists of songs as well as their features. Each one is described in range from 0.0 to 1.0.</h2>>
+     <ul>
+         <li><b>danceability</b> - describes how suitable a track is for dancing based on a combination of musical elements. A value of 0.0 is least danceable and 1.0 is most danceable.A value of 0.0 is least danceable and 1.0 is most danceable</li>
+         <li><b>acousticness</b> - measures whether the track is acoustic. 1.0 represents high confidence that it is</li>
+         <li><b>energy</b> - a measure of intensity and activity</li>
+         <li><b>instrumentalness</b> - predicts whether a track contains no vocals</li>
+         <li><b>liveness</b> - detects the presence of an audience in the recording. Higher value represents an increased probability that the track was performed live</li>
+         <li><b>speechiness</b> - detects the presence of spoken words in a track. The more speech-like the recording (e.g audio book), the closer to 1.0 the value is</li>
+        <li><b>valence</b> - describes positiveness conveyed by a track. Audio with high valence sounds more positive</li>
+    </ul>
+
+ </div>
+{% endblock content %}

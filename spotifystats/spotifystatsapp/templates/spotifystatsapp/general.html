@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <!-- CSS -->
+
+  <style>
+    body {
+      background-color: #191414;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      margin-top: 20px;
+    }
+
+    div {
+        text-align: center;
+        background-color: #ffffff;
+        margin: auto 50px;
+        font-family: 'Poppins', sans-serif;
+        align-content: center;
+
+
+    }
+
+    li {
+        text-align: left !important;
+        font-size: x-large;
+        list-style-type: none;
+        padding: 5px;
+
+    }
+
+
+.button {
+  align-items: center;
+  background-color: #fff;
+  border: 2px solid #000;
+  box-sizing: border-box;
+  color: #000;
+  cursor: pointer;
+  display: inline-flex;
+  fill: #000;
+  font-family: Inter,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  height: 48px;
+  justify-content: center;
+  letter-spacing: -.8px;
+  line-height: 24px;
+  min-width: 140px;
+  outline: 0;
+  padding: 0 17px;
+  text-align: center;
+  text-decoration: none;
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button:focus {
+  color: #171e29;
+}
+
+.button:hover {
+  border-color: #1DB954;
+  color: #1DB954;
+  fill: #1DB954;
+}
+
+.button:active {
+  border-color: #1DB954;
+  color: #1DB954;
+  fill: #1DB954;
+}
+
+@media (min-width: 768px) {
+  .button {
+    min-width: 170px;
+  }
+}
+
+
+
+  </style>
+
+
+</head>
+<body>
+
+<div class="container">
+  {% block content %}
+
+  {% endblock content %}
+
+</div>
+
+</body>
+</html>

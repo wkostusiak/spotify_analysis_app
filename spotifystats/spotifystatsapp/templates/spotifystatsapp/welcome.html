@@ -1,0 +1,10 @@
+{% extends 'spotifystatsapp/general.html'%}
+
+
+  {% block content %}
+    <div>
+    <h1>Hello!</h1>
+    <h1>Wanna chceck your spotify stats?</h1>
+<a href = "{% url 'getauth' %}"><button class="button" role="button">Click to log in with Spotify</button></a>
+      </div>
+  {% endblock content %}
