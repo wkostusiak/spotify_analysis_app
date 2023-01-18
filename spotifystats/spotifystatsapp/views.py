@@ -45,7 +45,7 @@ class AuthURL(View):
         genres_bar_div = top10genres(sp)
         donut_div_long = topdecades(sp, 'long_term')
         donut_div_short = topdecades(sp, 'short_term')
-        bar_div,scattered_plot = topsongs_compared(sp)
+        bar_div,fig_world = topsongs_compared(sp)
         matrix_div, heat_div = compared(sp)
 
 
@@ -58,7 +58,7 @@ class AuthURL(View):
             'donut_div_short': donut_div_short,
             'matrix_div' : matrix_div,
             'heat_div' : heat_div,
-            'scattered_plot' : scattered_plot,
+            'fig_world' : fig_world,
 
         }
 

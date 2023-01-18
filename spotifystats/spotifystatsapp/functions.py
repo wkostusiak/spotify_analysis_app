@@ -6,7 +6,6 @@ import plotly.graph_objs as go
 from plotly.offline import plot
 import random
 import numpy as np
-import plotly.graph_objects as go
 
 # top 10 artists, function returns wordcloud with their names#
 
@@ -63,17 +62,24 @@ def top10genres(current_sp):
                 genres_dict[type] = genres_dict[type] + 1
 
 
-    df = pd.DataFrame({"genres": genres_dict.keys(), "genres_distribution": genres_dict.values(), "genres names": genres_dict.keys() })
+    df = pd.DataFrame({"genres": genres_dict.keys(), "genres distribution": genres_dict.values(), "genres names": genres_dict.keys() })
     fig = px.bar(
         data_frame=df,
         y="genres",
-        x="genres_distribution",
+        x="genres distribution",
         orientation="h",
-        title='sth',
     )
 
     fig.update_layout(
         autosize=True,
+        title={
+            'text' : 'Genres distribution for your top 10 artists',
+            'y': 0.95,
+            'x': 0.5,
+            'xanchor' : 'center',
+            'yanchor' : 'top'
+        },
+        font_color = 'black',
     )
 
     genres_bar_div = plot(fig, output_type='div')
@@ -187,24 +193,27 @@ def topsongs_compared(current_sp):
         ids_world.append(nested_dict['id'])
 
     list_of_features_world, labels = TopSongs.top_50_features(songs, current_sp, ids_world)
+    avgs_world = TopSongs.average(songs, list_of_features_world)
 
-    world_compared_df = pd.DataFrame(zip(labels, list_of_features_world, list_of_features_short),
-                                     columns=['danceability', 'energy', 'speechiness', 'acousticness', 'instrumentalness',
-                                              'liveness', 'valence'])
-
-    fig_world = px.scatter(world_compared_df, y='labels',
-                     x=['danceability', 'energy', 'speechiness', 'acousticness', 'instrumentalness',
-                                              'liveness', 'valence'],
-
-                    )
-
-    fig_world.update_layout(
-        autosize=True,
+    trace_short = plotly.graph_objs.Scatter(
+        x=labels,
+        y=avgs_short,
+        mode='markers',
+        name='trace short'
     )
 
-    scattered_plot = plot(fig_world, output_type='div')
+    trace_world = plotly.graph_objs.Scatter(
+        x=labels,
+        y=avgs_world,
+        mode='markers',
+        name='trace world'
+    )
 
-    return bar_div, scattered_plot
+    data = [trace_short, trace_world]
+    fig_world = plot(data, output_type='div')
+
+
+    return bar_div, fig_world
 
 
 

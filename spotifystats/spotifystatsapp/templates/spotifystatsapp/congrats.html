@@ -2,11 +2,11 @@
 {% block content %}
 
  <div>
-    <h1>Congrats!</h1>
-    <h2>You are authenticated! </h2>
+    <h2>Congrats! You are authenticated!</h2>
 
      <!-- genres top artists scattered plot -->
 
+        <h3> Plot below shows genres represented by your top 10 artists:</h3>
     {{ genres_bar_div|safe }}
 
 
@@ -19,7 +19,7 @@
      {{ bar_div|safe }}
      {{ matrix_div|safe }}
      {{ heat_div|safe }}
-     {{ scattered_plot|safe }}
+     {{ fig_world|safe }}
 
      <!-- genres in top songs -->
 
