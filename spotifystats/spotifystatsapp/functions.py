@@ -6,8 +6,10 @@ import plotly.graph_objs as go
 from plotly.offline import plot
 import random
 import numpy as np
+from plotly.subplots import make_subplots
+from sklearn.linear_model import LinearRegression
 
-# top 10 artists, function returns wordcloud with their names#
+# top 10 artists, function returns wordcloud with their names #
 
 def top10artists(current_sp):
     artists = current_sp.current_user_top_artists(limit=10, time_range='long_term')
@@ -16,9 +18,7 @@ def top10artists(current_sp):
     for item in list:
         names.append(item['name'])
 
-    #wordcloud with top 10 long-term artists #
-
-    colors = [plotly.colors.DEFAULT_PLOTLY_COLORS[random.randrange(1, 10)] for i in range(10)]
+    colors = [plotly.colors.sequential.algae[random.randrange(1, 10)] for i in range(10)]
     weights = [random.randint(15, 35) for i in range(10)]
 
     data = go.Scatter(x=[random.random() for i in range(30)],
@@ -33,9 +33,7 @@ def top10artists(current_sp):
     fig = go.Figure(data=[data], layout=layout)
 
     fig.update_layout(
-        autosize=False,
-        height=500,
-        width=500,
+        autosize=True,
     )
     names_cloud = plot(fig, output_type='div')
 
@@ -43,7 +41,7 @@ def top10artists(current_sp):
 
 
 # genres represented by top 10 artists #
-#returns horizontal bar chart with genres distribution"
+# returns horizontal bar chart with genres distribution #
 
 
 def top10genres(current_sp):
@@ -51,7 +49,10 @@ def top10genres(current_sp):
     genres = []
     list = artists['items']
     for item in list:
-        genres.append(item['genres'])
+        if item['genres'] == []:  #  if artist is not yet classified, the array is empty #
+            pass
+        else:
+            genres.append(item['genres'])
 
     genres_dict = {}
     for types in genres:
@@ -81,6 +82,7 @@ def top10genres(current_sp):
         },
         font_color = 'black',
     )
+    fig.update_traces(marker_color='#1DB954',)
 
     genres_bar_div = plot(fig, output_type='div')
 
@@ -110,7 +112,6 @@ class TopSongs:
 
         danceability = []
         energy = []
-        loudness = []
         speechiness = []
         acousticness = []
         instrumentalness = []
@@ -162,22 +163,35 @@ def topsongs_compared(current_sp):
     avgs_long = TopSongs.average(songs, list_of_features_long)
     avgs_short = TopSongs.average(songs, list_of_features_short)
 
-    df = pd.DataFrame({"features": labels, "average_long": avgs_long, "average_short": avgs_short })
+    df = pd.DataFrame({"features": labels, "long term": avgs_long,
+                       "short term": avgs_short})
     fig = px.bar(
         data_frame=df,
         x="features",
-        y=["average_long", "average_short"],
+        y=["long term", "short term"],
         barmode="group",
         orientation="v",
-        title='sth',
         color_discrete_map={
-            'avergae_long': '#1DB954',
-            'average_short': '#191414',
+            'long term': '#1DB954',
+            'short term': '#191414',
+        },
+        labels={
+            "value": "average",
+            "features": "features",
+            "variable" : "term"
         },
     )
 
     fig.update_layout(
         autosize=True,
+        title={
+            'text': 'Averages for different features in long and short term',
+            'y': 0.95,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
+        font_color='black',
     )
 
     bar_div = plot(fig, output_type='div')
@@ -264,11 +278,12 @@ def topdecades(current_sp, term):
 
 #change names etc#
 
-def compared(current_sp):
+def scatter_matrix(current_sp):
     songs = TopSongs()
     tracks_long_term = TopSongs.top_50_songs(songs, current_sp, 'long_term')
     ids_long = TopSongs.top_50_features_ids(songs, tracks_long_term, current_sp)
     list_of_features_long, labels = TopSongs.top_50_features(songs, current_sp, ids_long)
+
     res = {labels[i]: list_of_features_long[i] for i in range(len(labels))}
     df = pd.DataFrame.from_dict(res)
 
@@ -276,16 +291,29 @@ def compared(current_sp):
                             dimensions=['danceability', 'energy',  'valence'],
                             labels=['danceability', 'energy', 'valence'],
                             title="Scatter matrix",
-
                             )
 
-    fig.update_traces(diagonal_visible=False)
+    fig.update_traces(diagonal_visible=False,)
     fig.update_layout(
         height=600,
-        width=600
+        width=600,
     )
 
     matrix_div = plot(fig, output_type='div')
+
+    # IN PROGRESS #
+    #list_of_features = [danceability, energy, speechiness, acousticness, instrumentalness, liveness, valence]
+    figs = make_subplots(specs=[[{"secondary_y": True}]])
+    figs.add_trace(go.Scatter(x=list_of_features_long[0], y=list_of_features_long[6], mode='markers'))
+    model = LinearRegression().fit(list_of_features_long[0],list_of_features_long[6])
+    y_pred = model.predict(list_of_features_long[0])
+    figs.add_trace(go.Scatter(x=list_of_features_long[0], y=y_pred, mode='lines'))
+
+    figs.update_layout(
+        autosize=True,
+    )
+
+    figs_div = plot(figs, output_type='div')
 
     #heatmap
 
@@ -308,7 +336,7 @@ def compared(current_sp):
 
     heat_div = plot(fig_heatmap, output_type='div')
 
-    return matrix_div, heat_div
+    return matrix_div, heat_div, figs_div
 
 
 

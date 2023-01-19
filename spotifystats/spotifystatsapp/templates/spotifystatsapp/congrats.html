@@ -3,32 +3,22 @@
 
  <div>
     <h2>Congrats! You are authenticated!</h2>
+    <h3>Now you can explore you spotify stats thanks to spotify API & Plotly.</h3>
 
-     <!-- genres top artists scattered plot -->
+     <!-- genres top artists bar chart -->
 
-        <h3> Plot below shows genres represented by your top 10 artists:</h3>
-    {{ genres_bar_div|safe }}
+      {{ genres_bar_div|safe }}
+
+     <h3> Each artist is associated with a list of the genres.
+         Plot above shows genres represented by your top 10 artists in long term, which means that
+         it refers to data from several years including all new data as it becomes available.</h3>
 
 
      <!-- names cloud -->
 
     {{ names_cloud|safe }}
 
-     <!-- features bar chart -->
-
-     {{ bar_div|safe }}
-     {{ matrix_div|safe }}
-     {{ heat_div|safe }}
-     {{ fig_world|safe }}
-
-     <!-- genres in top songs -->
-
-     {{ donut_div_long|safe }}
-     {{ donut_div_short|safe }}
-
-
-
-     <h2>The data fetched using spotify API consists of songs as well as their features. Each one is described in range from 0.0 to 1.0.</h2>>
+          <h2>The data fetched using spotify API consists of songs as well as their features. Each one is described in range from 0.0 to 1.0.</h2>>
      <ul>
          <li><b>danceability</b> - describes how suitable a track is for dancing based on a combination of musical elements. A value of 0.0 is least danceable and 1.0 is most danceable.A value of 0.0 is least danceable and 1.0 is most danceable</li>
          <li><b>acousticness</b> - measures whether the track is acoustic. 1.0 represents high confidence that it is</li>
@@ -38,6 +28,25 @@
          <li><b>speechiness</b> - detects the presence of spoken words in a track. The more speech-like the recording (e.g audio book), the closer to 1.0 the value is</li>
         <li><b>valence</b> - describes positiveness conveyed by a track. Audio with high valence sounds more positive</li>
     </ul>
+
+     <!-- features bar chart -->
+
+     {{ bar_div|safe }}
+
+     <!-- idk -->
+
+     {{ matrix_div|safe }}
+     {{ heat_div|safe }}
+     {{ fig_world|safe }}
+     {{ figs_div|safe }}
+
+     <!-- genres in top songs -->
+
+     {{ donut_div_long|safe }}
+     {{ donut_div_short|safe }}
+
+
+
 
  </div>
 {% endblock content %}
