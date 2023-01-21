@@ -276,67 +276,78 @@ def topdecades(current_sp, term):
 
     return donut_div
 
-#change names etc#
+# addtarce allows to add multiple scatter subplots with linear regression #
 
-def scatter_matrix(current_sp):
+def addtrace(fig, x, y, row, col):
+    fig.add_trace(go.Scatter(x=x, y=y, mode='markers'),row=row, col=col)
+    model = LinearRegression().fit(np.array(x).reshape((-1, 1)), np.array(y))
+    y_pred = model.predict(np.array(x).reshape((-1, 1)))
+    fig.add_trace(go.Scatter(x=x, y=y_pred, mode='lines'),
+                   row, col)
+
+
+def features_compared(current_sp):
+
+    # fetching features for top 50 songs #
+
     songs = TopSongs()
     tracks_long_term = TopSongs.top_50_songs(songs, current_sp, 'long_term')
     ids_long = TopSongs.top_50_features_ids(songs, tracks_long_term, current_sp)
     list_of_features_long, labels = TopSongs.top_50_features(songs, current_sp, ids_long)
 
-    res = {labels[i]: list_of_features_long[i] for i in range(len(labels))}
-    df = pd.DataFrame.from_dict(res)
+    scatter_figs = make_subplots(rows=2, cols=3)
 
-    fig = px.scatter_matrix(df,
-                            dimensions=['danceability', 'energy',  'valence'],
-                            labels=['danceability', 'energy', 'valence'],
-                            title="Scatter matrix",
-                            )
+    # adding multiple subplots using addtrace function #
+    # each feature vs valence #
 
-    fig.update_traces(diagonal_visible=False,)
-    fig.update_layout(
-        height=600,
-        width=600,
-    )
+    i = 1
+    for feature in list_of_features_long[:-1]:
+        if i < 4:
+            row = 1
+            addtrace(fig=scatter_figs, x=feature, y=list_of_features_long[6], row=row, col=i)
+        else:
+            row = 2
+            addtrace(fig=scatter_figs, x=feature, y=list_of_features_long[6], row=row, col=i-3)
+        i += 1
 
-    matrix_div = plot(fig, output_type='div')
-
-    # IN PROGRESS #
-    #list_of_features = [danceability, energy, speechiness, acousticness, instrumentalness, liveness, valence]
-    figs = make_subplots(specs=[[{"secondary_y": True}]])
-    figs.add_trace(go.Scatter(x=list_of_features_long[0], y=list_of_features_long[6], mode='markers'))
-    model = LinearRegression().fit(list_of_features_long[0],list_of_features_long[6])
-    y_pred = model.predict(list_of_features_long[0])
-    figs.add_trace(go.Scatter(x=list_of_features_long[0], y=y_pred, mode='lines'))
-
-    figs.update_layout(
+    scatter_figs.update_layout(
         autosize=True,
     )
 
-    figs_div = plot(figs, output_type='div')
+    scatter_div = plot(scatter_figs, output_type='div')
 
-    #heatmap
+    # creating heatmap - a matrix with correlation of all features #
 
-    res = {labels[i]: list_of_features_long[i] for i in range(len(labels))}
-    df_heat = pd.DataFrame.from_dict(res)
+    dict_heat = {labels[i]: list_of_features_long[i] for i in range(len(labels))}
+    df_heat = pd.DataFrame.from_dict(dict_heat)
 
-
-    matrix = df_heat.corr()  # returns a matrix with correlation of all features
-    x_list = ['danceability', 'energy', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence']
+    matrix = df_heat.corr()
+    x_list = ['danceability', 'energy', 'speechiness', 'acousticness', 'instrumentalness',
+              'liveness', 'valence']
 
     fig_heatmap = go.Figure(data=go.Heatmap(
         z=matrix,
         x=x_list,
         y=x_list,
-        hoverongaps=True))
-    fig_heatmap.update_layout(margin=dict(t=200, r=200, b=200, l=200),
-                              width=800, height=650,
-                              autosize=True)
+        hoverongaps=True,
+        ))
 
+    fig_heatmap.update_layout(
+        autosize=True,
+        title={
+            'text': 'Correlation heatmap for features in your top 50 songs',
+            'y': 0.95,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+
+        },
+        font_color='black',
+    )
 
     heat_div = plot(fig_heatmap, output_type='div')
 
-    return matrix_div, heat_div, figs_div
+    return heat_div, scatter_div
 
 
 
