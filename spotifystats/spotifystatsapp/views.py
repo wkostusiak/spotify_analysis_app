@@ -15,7 +15,7 @@ from django.shortcuts import redirect
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
-from .functions import top10artists, top10genres, topdecades, topsongs_compared, features_compared
+from .functions import top10artists, top10genres,  topdecades_chart, topsongs_compared, features_compared
 
 class WelcomePage(View):
     def get(self, request, *args, **kwargs):
@@ -41,8 +41,7 @@ class AuthURL(View):
 
         names_cloud = top10artists(sp)
         genres_bar_div = top10genres(sp)
-        donut_div_long = topdecades(sp, 'long_term')
-        donut_div_short = topdecades(sp, 'short_term')
+        donut_div = topdecades_chart(sp)
         bar_div,fig_world = topsongs_compared(sp)
         heat_div, scatter_div = features_compared(sp)
 
@@ -52,8 +51,7 @@ class AuthURL(View):
             'genres_bar_div' : genres_bar_div,
             'names_cloud' : names_cloud,
             'bar_div' : bar_div,
-            'donut_div_long' : donut_div_long,
-            'donut_div_short': donut_div_short,
+            'donut_div' : donut_div,
             'heat_div' : heat_div,
             'fig_world' : fig_world,
             'scatter_div': scatter_div,

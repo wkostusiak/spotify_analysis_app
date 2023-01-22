@@ -213,14 +213,16 @@ def topsongs_compared(current_sp):
         x=labels,
         y=avgs_short,
         mode='markers',
-        name='trace short'
+        name='trace short',
+        marker_color='#1DB954'
     )
 
     trace_world = plotly.graph_objs.Scatter(
         x=labels,
         y=avgs_world,
         mode='markers',
-        name='trace world'
+        name='trace world',
+        marker_color='#191414'
     )
 
     data = [trace_short, trace_world]
@@ -267,24 +269,50 @@ def topdecades(current_sp, term):
             decades_dict[decade] = decades_dict[decade] + 1
 
     decades_labels = [str(x) for x in decades_dict.keys()]
+    decades_vals = list(decades_dict.values())
 
-    df_decades = pd.DataFrame({"decades": decades_labels, "percentages": decades_dict.values()})
-    fig_donut = px.pie(df_decades, values="percentages", names="decades", color_discrete_sequence=px.colors.sequential.Emrld)
+    return decades_labels, decades_vals
+def topdecades_chart(current_sp):
 
-    fig_donut.update_traces(hole=.4, hoverinfo="label+percent+name")
-    donut_div = plot(fig_donut, output_type='div')
+    decades_labels, decades_vals_long = topdecades(current_sp, 'long_term')
+    decades_labels, decades_vals_short = topdecades(current_sp, 'short_term')
+
+    fig = make_subplots(rows=1, cols=2, shared_xaxes=False, specs=[[{"type": "pie"}, {"type": "pie"}]],
+                        subplot_titles=('top 50 songs in long term <br>', 'top 50 songs in short term <br>'))
+
+    fig.add_trace(go.Pie(
+        values = decades_vals_long,
+        labels= decades_labels),
+        row=1, col=1)
+
+    fig.add_trace(go.Pie(
+        values = decades_vals_short,
+        labels = decades_labels),
+        row=1, col=2)
+
+
+    colorscale = ['#1db954', '#EDEF5D', '#179443', '#0F757A', '#116F32', '#0E5C29', '#1db954',
+                  '#33C065', '#4AC776', '#60CE87', '#77D598', '#8EDCA9']
+
+
+    fig.update_traces(hoverinfo="label+percent+name",
+                      marker=dict(colors=colorscale)
+                      )
+
+
+
+    donut_div = plot(fig, output_type='div')
 
     return donut_div
 
 # addtarce allows to add multiple scatter subplots with linear regression #
 
 def addtrace(fig, x, y, row, col):
-    fig.add_trace(go.Scatter(x=x, y=y, mode='markers'),row=row, col=col)
+    fig.add_trace(go.Scatter(x=x, y=y, mode='markers', marker=dict(color='#1DB954')),row=row, col=col)
     model = LinearRegression().fit(np.array(x).reshape((-1, 1)), np.array(y))
     y_pred = model.predict(np.array(x).reshape((-1, 1)))
-    fig.add_trace(go.Scatter(x=x, y=y_pred, mode='lines'),
+    fig.add_trace(go.Scatter(x=x, y=y_pred, mode='lines', line=dict(color='#191414')),
                    row, col)
-
 
 def features_compared(current_sp):
 
@@ -295,23 +323,31 @@ def features_compared(current_sp):
     ids_long = TopSongs.top_50_features_ids(songs, tracks_long_term, current_sp)
     list_of_features_long, labels = TopSongs.top_50_features(songs, current_sp, ids_long)
 
-    scatter_figs = make_subplots(rows=2, cols=3)
+    # scatter plot and correlation trendline - each feature vs valence #
+
+    scatter_figs = make_subplots(rows=2, cols=3, y_title='valence', vertical_spacing = 0.25)
+
 
     # adding multiple subplots using addtrace function #
-    # each feature vs valence #
 
     i = 1
     for feature in list_of_features_long[:-1]:
         if i < 4:
             row = 1
-            addtrace(fig=scatter_figs, x=feature, y=list_of_features_long[6], row=row, col=i)
+            addtrace(fig=scatter_figs, x=feature, y=list_of_features_long[6],
+                     row=row, col=i)
+            scatter_figs.update_xaxes(title_text=f'{labels[i-1]}', row=row, col=i)
         else:
             row = 2
-            addtrace(fig=scatter_figs, x=feature, y=list_of_features_long[6], row=row, col=i-3)
+            addtrace(fig=scatter_figs, x=feature, y=list_of_features_long[6],
+                     row=row, col=i-3,)
+            scatter_figs.update_xaxes(title_text=f'{labels[i-1]} <br>', row=row, col=i-3)
         i += 1
 
     scatter_figs.update_layout(
         autosize=True,
+        font=dict(color='black'),
+        showlegend=False
     )
 
     scatter_div = plot(scatter_figs, output_type='div')
@@ -330,6 +366,7 @@ def features_compared(current_sp):
         x=x_list,
         y=x_list,
         hoverongaps=True,
+        colorscale='aggrnyl'
         ))
 
     fig_heatmap.update_layout(
