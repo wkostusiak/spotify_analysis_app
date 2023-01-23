@@ -3,51 +3,104 @@
 
  <div>
     <h2>Congrats! You are authenticated!</h2>
-    <h3>Now you can explore you spotify stats thanks to spotify API & Plotly.</h3>
-
-     <!-- genres top artists bar chart -->
-
-      {{ genres_bar_div|safe }}
-
-     <h3> Each artist is associated with a list of the genres.
-         Plot above shows genres represented by your top 10 artists in long term, which means that
-         it refers to data from several years including all new data as it becomes available.</h3>
-
+    <h3>Now you can explore your spotify stats thanks to the spotify API & Plotly.</h3>
 
      <!-- names cloud -->
+     <div class="compartment">
+         <h1 class="title">Top 10 artists & genres</h1>
 
-    {{ names_cloud|safe }}
+         {{ names_cloud|safe }}
 
-          <h2>The data fetched using spotify API consists of songs as well as their features. Each one is described in range from 0.0 to 1.0.</h2>>
-     <ul>
-         <li><b>danceability</b> - describes how suitable a track is for dancing based on a combination of musical elements. A value of 0.0 is least danceable and 1.0 is most danceable.A value of 0.0 is least danceable and 1.0 is most danceable</li>
-         <li><b>acousticness</b> - measures whether the track is acoustic. 1.0 represents high confidence that it is</li>
-         <li><b>energy</b> - a measure of intensity and activity</li>
-         <li><b>instrumentalness</b> - predicts whether a track contains no vocals</li>
-         <li><b>liveness</b> - detects the presence of an audience in the recording. Higher value represents an increased probability that the track was performed live</li>
-         <li><b>speechiness</b> - detects the presence of spoken words in a track. The more speech-like the recording (e.g audio book), the closer to 1.0 the value is</li>
-        <li><b>valence</b> - describes positiveness conveyed by a track. Audio with high valence sounds more positive</li>
-    </ul>
+         <p class="padding_bottom">Cloud above represents your top 10 artists in a long term. It means that names
+             refer to your spotify data since the creation of your account, including new information
+             as it becomes available.</p>
 
+         </div>
+
+     <div class="compartment">
+     <!-- genres top artists bar chart -->
+
+          {{ genres_bar_div|safe }}
+          <p class = "padding_bottom">Each artist is associated with one or more different genres. The bar chart shows genres represented by
+          your top 10 artists in a long term.</p>
+
+     </div>
+
+
+    <div class="compartment">
+         <h1 class="title">Top 50 songs' features</h1>
+         <p>The data fetched using spotify API consists of artists, songs and their features.
+             Each one is described in a range from 0 to 1.</p>
+         <ul>
+             <li><b>danceability</b> - describes how suitable a song is for dancing based on a combination
+                 of musical elements. A value of 0 is least danceable and 1 is most danceable.</li>
+             <li><b>acousticness</b> - measures whether the track is acoustic; 1.0 represents high confidence
+                 that it is</li>
+             <li><b>energy</b> - measures intensity and activity of a track</li>
+             <li><b>instrumentalness</b> - predicts whether a track contains no vocals</li>
+             <li><b>liveness</b> - detects the presence of an audience. Higher value represents increased
+                 probability that the song was performed live</li>
+             <li><b>speechiness</b> - detects the presence of spoken words. If a recording is more speech-like,
+                 its value is closer to 1.0</li>
+             <li><b>valence</b> - describes positiveness conveyed by a track. Songs with high valence sound more
+                 positively</li>
+        </ul>
+    </div>
+
+     <div class="compartment">
      <!-- features bar chart -->
 
-     {{ bar_div|safe }}
+         <p class = "padding_bottom">Bar chart below allows you to compare average score for each feature in your top 50 songs
+         in short time and long time. Short time results are based on your streaming in the last month.</p>
 
-     <!-- idk -->
+         {{ bar_div|safe }}
+    </div>
 
-     {{ matrix_div|safe }}
-     {{ heat_div|safe }}
-     {{ fig_world|safe }}
-<h1>elo</h1>
-     {{ scatter_div|safe }}
+    <div class="compartment">
+         <!-- heatmap -->
 
-     <!-- genres in top songs -->
+         <p class = "padding_bottom">Is there any correlation between your favourite music's features?
+             Correlation heatmap visualizes the strength of relationships between numerical values. In this
+             case, values are average scores for each feature in your top 50 songs. Based on a color of a chosen
+             field you can check if two features are related to each other. The higher value, the
+             stronger relationship is.</p>
 
-     {{ donut_div|safe }}
+         {{ heat_div|safe }}
+
+     </div>
+
+     <div class="compartment">
+          <p class = "padding_bottom">You can check how your current music taste differs from the world's most listened songs.
+          Each point on a plot represents average score for certain feature. Green ones correspond to your
+          top 50 songs, whereas black ones indicate the score for world's current top 50 songs.</p>
+
+         {{ fig_world|safe }}
+
+     </div>
 
 
+    <div class="compartment">
+         <p class = "padding_bottom">Correlation is a statistical measure that expresses the extent to which two variables are linearly related.
+             It may seem that some features correlate with positive or negative mood. Scatter plots below show comparison between valence and
+             each feature describing your top songs. Let's check if there is any linear relation between them! R-squared shows how well the
+             linear regression model fits the observed data. Usually, when the R-squared is close to 1, it suggests a better fit for the model.</p>
+
+         {{ scatter_div|safe }}
+
+     </div>
 
 
+    <div class="compartment">
+        <p class = "padding_bottom"></p>
+         <h1 class="title">Top decades</h1>
+         <!-- decades in top songs -->
+
+         <p>What is your favorite decade of music? Two pie charts below show which decades occur in your
+             top 50 songs and what percentage they are.</p>
+
+         {{ donut_div|safe }}
+
+    </div>
 
  </div>
 {% endblock content %}
