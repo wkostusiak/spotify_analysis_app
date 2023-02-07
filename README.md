@@ -50,7 +50,9 @@ Short time results are based on streaming in the last month.
 * HTML5
 * CSS3
 
+
 ![main page](https://github.com/wkostusiak/spotify_analysis_app/blob/master/spotifystats/images/main_page.png)
+
 
 ### Features
 
@@ -64,7 +66,7 @@ Short time results are based on streaming in the last month.
 
 ![example bar chart](https://github.com/wkostusiak/spotify_analysis_app/blob/master/spotifystats/images/top_50.png)
 <br>
-![example pie charts](https://github.com/wkostusiak/spotify_analysis_app/blob/master/spotifystats/images/decades.png)
+![example pie charts](https://github.com/wkostusiak/spotify_analysis_app/blob/master/spotifystats/images/top_decades.png)
 
 ### To be done...
 * deployment of the app - any free hosting with more memory than pythonanywhere
